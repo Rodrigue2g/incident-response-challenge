@@ -20,7 +20,10 @@ const body = DM_Sans({
 export const metadata: Metadata = {
   title: "Citadelle Private Bank",
   description: "Citadelle private banking. A fictional educational environment.",
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
