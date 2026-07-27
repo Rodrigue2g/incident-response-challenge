@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import PublicHeader from "@/components/PublicHeader";
-import { CitadelleLogo } from "@/components/CitadelleLogo";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Document Library — Citadelle",
@@ -138,14 +138,7 @@ export default function DocumentsPage() {
         </article>
       </section>
 
-      <footer className="documents-footer">
-        <div className="wordmark">
-          <span className="brand-mark"><CitadelleLogo /></span>
-          <span>Citadelle</span>
-        </div>
-        <p>Corporate information and disclosures</p>
-        <p>© 2026 Citadelle Private Bank</p>
-      </footer>
+      <SiteFooter note="Corporate information and disclosures · © 2026 Citadelle Private Bank" />
     </main>
   );
 }

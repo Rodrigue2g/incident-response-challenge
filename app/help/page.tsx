@@ -1,5 +1,6 @@
 import HelpChat from "@/components/HelpChat";
 import PublicHeader from "@/components/PublicHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export default function HelpPage() {
   return (
@@ -13,6 +14,7 @@ export default function HelpPage() {
         </div>
         <HelpChat />
       </section>
+      <SiteFooter />
     </main>
   );
 }

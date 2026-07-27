@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PublicHeader from "@/components/PublicHeader";
 import { CitadelleLogo } from "@/components/CitadelleLogo";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const Arrow = () => (
   <svg aria-hidden="true" viewBox="0 0 20 20">
@@ -77,14 +78,7 @@ export default function Home() {
         <Link className="light-button" href="/security">Visit security centre <Arrow /></Link>
       </section>
 
-      <footer id="help">
-        <div className="wordmark">
-          <span className="brand-mark"><CitadelleLogo /></span>
-          <span>Citadelle <b>Private Bank</b></span>
-        </div>
-        <p>Fictional bank · Educational environment</p>
-        <p>© 2026 Citadelle Private Bank</p>
-      </footer>
+      <SiteFooter note="Fictional bank · Educational environment · © 2026 Citadelle Private Bank" />
 
       <div className="site-notice">
         <p className="site-notice-label">Security notice</p>

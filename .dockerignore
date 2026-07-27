@@ -1,0 +1,15 @@
+.git
+.next
+node_modules
+npm-debug.log*
+.DS_Store
+
+# Facilitator-only answers and pristine evidence must never enter the image.
+facilitator
+
+# Local and editor state
+.env
+.env.*
+.vscode
+.idea
+*.tsbuildinfo

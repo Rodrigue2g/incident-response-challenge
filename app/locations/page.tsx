@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { CitadelleLogo } from "@/components/CitadelleLogo";
 import PublicHeader from "@/components/PublicHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { sourceClueParts } from "@/lib/generated-challenge";
 
 const locations = [
@@ -87,14 +87,7 @@ export default function LocationsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify({ locale: "en-GB", retiredThemeValue: sourceClueParts[2] }) }}
       />
 
-      <footer className="locations-footer">
-        <div className="wordmark">
-          <span className="brand-mark"><CitadelleLogo /></span>
-          <span>Citadelle</span>
-        </div>
-        <p>Private banking across borders</p>
-        <p>© 2026 Citadelle Private Bank</p>
-      </footer>
+      <SiteFooter note="Private banking across borders · © 2026 Citadelle Private Bank" />
     </main>
   );
 }

@@ -82,3 +82,35 @@ npm run generate:challenges
 ```
 
 The generator is deterministic for the seed in `facilitator/challenge.env`.
+
+## Docker deployment
+
+Generate the challenge assets before building the image:
+
+```bash
+npm run generate:challenges
+docker compose up --build -d
+```
+
+The application is then available at `http://localhost:3000`.
+
+To run without Compose:
+
+```bash
+docker build -t citadelle-challenge .
+docker run --name citadelle-challenge -p 3000:3000 citadelle-challenge
+```
+
+For participants on the same network, share:
+
+```text
+http://HOST_LAN_IP:3000
+```
+
+The host firewall must allow incoming TCP traffic on port 3000. The
+`.dockerignore` file prevents the facilitator directory from being copied into
+the image.
+
+For an internet-facing deployment, place a reverse proxy in front of the
+container and use a domain name with HTTPS. Keep port 3000 private to the host
+when a reverse proxy is used.

@@ -100,7 +100,12 @@ h1 { font-size: clamp(48px, 6vw, 84px); font-weight: 500; line-height: 1.02; mar
 .security-callout > p { color: rgba(255,255,255,.67); line-height: 1.6; }
 .light-button { background: white; color: var(--green); white-space: nowrap; }
 footer { align-items: center; display: flex; justify-content: space-between; margin: auto; max-width: 1240px; padding: 44px 32px; }
-footer p { color: rgba(255,255,255,.55); font-size: 12px; }
+footer p { color: rgba(255,255,255,.55); font-size: 12px; margin: 0; }
+.footer-right { align-items: flex-end; display: flex; flex-direction: column; gap: 10px; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: rgba(255,255,255,.45); font-size: 12px; transition: color .15s; }
+.footer-links a:hover { color: rgba(255,255,255,.8); }
+.site-footer-bar { background: #091e4a; color: white; }
 
 /* Locations */
 .locations-page { background: #f7f8fb; min-height: 100vh; }
