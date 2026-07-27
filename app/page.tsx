@@ -11,6 +11,14 @@ const Arrow = () => (
 export default function Home() {
   return (
     <main className="public-page">
+      {/* web-ops TODO: remove before next release — see WEB-2891 */}
+      <div dangerouslySetInnerHTML={{ __html:
+        "<!-- TODO (web-ops): strip the base64 artefact left in the /locations page source." +
+        " Three parts: data-office-ledger on the first location card, data-archive-note on" +
+        " .source-audit-fragment, and retiredThemeValue inside #regional-display-preferences." +
+        " Flagged by J. Beaumont — must be cleared before Tuesday deployment. -->"
+      }} />
+
       <PublicHeader active="home" />
 
       <section className="hero">
@@ -79,11 +87,21 @@ export default function Home() {
       <footer id="help">
         <div className="wordmark">
           <span className="brand-mark"><CitadelleLogo /></span>
-          <span>Citadelle</span>
+          <span>Citadelle <b>Private Bank</b></span>
         </div>
         <p>Fictional bank · Educational environment</p>
         <p>© 2026 Citadelle Private Bank</p>
       </footer>
+
+      <div className="site-notice">
+        <p className="site-notice-label">Security notice</p>
+        <p>
+          A third-party audit of this website identified content present in the page source that
+          was not intended for public release. Our web team is working to resolve this. If you
+          have discovered anything, please report it to our{" "}
+          <a href="mailto:security@citadelle.local?subject=Use%20browser%20inspector%20to%20find%20out%20more">security team</a>.
+        </p>
+      </div>
     </main>
   );
 }

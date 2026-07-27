@@ -28,7 +28,7 @@ export default function PublicHeader({
       <div className="public-header-inner">
         <Link className="wordmark" href="/" onClick={() => setOpen(false)}>
           <span className="brand-mark"><CitadelleLogo /></span>
-          <span>Citadelle</span>
+          <span>Citadelle <b>Private Bank</b></span>
         </Link>
 
         <button
@@ -54,7 +54,7 @@ export default function PublicHeader({
             </Link>
           ))}
           <Link className="nav-button" href="/admin" onClick={() => setOpen(false)}>
-            Admin sign in
+            Sign in
           </Link>
         </nav>
       </div>

@@ -18,7 +18,7 @@ const body = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Citadelle — Private Bank",
+  title: "Citadelle Private Bank",
   description: "Citadelle private banking. A fictional educational environment.",
   icons: { icon: "/favicon.svg" },
 };

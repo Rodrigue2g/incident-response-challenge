@@ -71,8 +71,7 @@ notebook, pristine evidence, and challenge configuration.
 
 The current application is intended for a supervised local session. It does not
 yet track participant progress. Admin containment state is client-only and
-resets when the page is refreshed; the admin interface also does not yet enforce
-server-side password validation.
+resets when the page is refreshed.
 
 ## Resetting generated evidence
 
