@@ -15,48 +15,72 @@ export default function Home() {
 
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">Banking made clear</p>
-          <h1>Move forward with confidence.</h1>
+          <p className="eyebrow">Private banking</p>
+          <h1>Protecting what matters most.</h1>
           <p className="hero-intro">
-            Simple everyday banking, thoughtful support, and security that works
-            quietly in the background.
+            Discreet, independent, and built on four decades of trust. We serve
+            private clients who expect more than a transaction.
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#services">Explore accounts <Arrow /></a>
-            <Link className="text-link" href="/security">How we protect you <Arrow /></Link>
+            <a className="primary-button" href="#services">Our services <Arrow /></a>
+            <Link className="text-link" href="/security">Security centre <Arrow /></Link>
           </div>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="north-star">✦</div>
-          <p>Independent since 1984</p>
+
+        <div className="hero-stats" aria-hidden="true">
+          <div className="hero-stat">
+            <strong>1984</strong>
+            <span>Year founded</span>
+          </div>
+          <div className="hero-stat">
+            <strong>6</strong>
+            <span>International offices</span>
+          </div>
+          <div className="hero-stat">
+            <strong>100%</strong>
+            <span>Independently owned</span>
+          </div>
         </div>
       </section>
 
       <section className="services" id="services">
         <div className="section-heading">
-          <p className="eyebrow">What we do</p>
-          <h2>Everything you need. Nothing you don’t.</h2>
+          <p className="eyebrow">What we offer</p>
+          <h2>Expertise tailored to your circumstances.</h2>
         </div>
         <div className="service-grid">
-          <article><span>01</span><h3>Everyday accounts</h3><p>Clear fees, instant updates, and simple tools for daily money.</p></article>
-          <article><span>02</span><h3>Savings</h3><p>Flexible ways to build towards the things that matter to you.</p></article>
-          <article><span>03</span><h3>Business banking</h3><p>Practical support and straightforward tools for growing teams.</p></article>
+          <article>
+            <span>01</span>
+            <h3>Wealth management</h3>
+            <p>Bespoke strategies for preserving and growing long-term wealth across generations.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Private accounts</h3>
+            <p>Dedicated relationship managers, discreet service, and accounts that fit your life.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Family office</h3>
+            <p>Consolidated oversight of complex family assets, succession, and philanthropy.</p>
+          </article>
         </div>
       </section>
 
       <section className="security-callout" id="security">
         <div>
-          <p className="eyebrow">Security centre</p>
-          <h2>Your money is watched around the clock.</h2>
+          <p className="eyebrow">Security</p>
+          <h2>Monitored around the clock.</h2>
         </div>
-        <p>Our team monitors unusual activity 24/7. If something looks wrong, contact us immediately.</p>
+        <p>Our security operations team monitors for unusual activity 24 hours a day. If something looks wrong, contact us immediately.</p>
         <Link className="light-button" href="/security">Visit security centre <Arrow /></Link>
       </section>
 
       <footer id="help">
-          <div className="wordmark"><span className="brand-mark"><CitadelleLogo /></span><span>Citadelle</span></div>
+        <div className="wordmark">
+          <span className="brand-mark"><CitadelleLogo /></span>
+          <span>Citadelle</span>
+        </div>
         <p>Fictional bank · Educational environment</p>
         <p>© 2026 Citadelle Private Bank</p>
       </footer>
