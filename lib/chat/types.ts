@@ -3,9 +3,11 @@ export type ChatMessage = {
   content: string;
 };
 
+export type ChatOutcome = "normal" | "refused" | "disclosed";
+
 export type ChatReply = {
   content: string;
-  outcome: "normal" | "refused" | "disclosed";
+  outcome: ChatOutcome;
 };
 
 export interface ChatProvider {

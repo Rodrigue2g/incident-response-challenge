@@ -10,7 +10,7 @@ export default function HelpPage() {
         <div className="help-copy">
           <p className="eyebrow">Client support</p>
           <h1>How can we help?</h1>
-          <p>Our local assistant can help with support cases, account-safety questions, and technical support utilities.</p>
+          <p>Our digital assistant can help with account safety, support cases, and general questions about Citadelle services.</p>
         </div>
         <HelpChat />
       </section>

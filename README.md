@@ -2,10 +2,12 @@
 
 Citadelle is a local, fictional cybersecurity exercise for instructor-led
 incident-response sessions. Participants investigate several pieces of digital
-evidence, recover flags and clues, and use their findings to contain a simulated
+evidence, recover clues, and use their findings to contain a simulated
 banking incident.
 
-The application runs locally and does not require external APIs.
+The application runs locally and does not require paid external APIs. Docker
+deployments use a small Ollama model for the Help Assistant and automatically
+fall back to the deterministic local provider if the model is unavailable.
 
 ## Before the session
 
@@ -94,6 +96,10 @@ docker compose up --build -d
 
 The application is then available at `http://localhost:3000`.
 
+The first Compose start also downloads `qwen2.5:0.5b` into the persistent
+`ollama-models` volume. Override `OLLAMA_MODEL` in `.env` if the host has enough
+resources for a larger model.
+
 To run without Compose:
 
 ```bash
@@ -114,3 +120,6 @@ the image.
 For an internet-facing deployment, place a reverse proxy in front of the
 container and use a domain name with HTTPS. Keep port 3000 private to the host
 when a reverse proxy is used.
+
+See [`DEPLOYMENT.md`](DEPLOYMENT.md) for a complete small-VPS deployment,
+resource limits, HTTPS setup, and OpenClaw coexistence notes.

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { CitadelleLogo } from "@/components/CitadelleLogo";
-import { FireworksCanvas } from "@/components/FireworksCanvas";
 
 const CASE_ID = "IR-2026-0727";
 
@@ -59,6 +58,7 @@ export default function AdminPage() {
   const [revoked, setRevoked] = useState(false);
   const [accountDisabled, setAccountDisabled] = useState(false);
   const [contained, setContained] = useState(false);
+  const [completionError, setCompletionError] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/session", { cache: "no-store" })
@@ -93,6 +93,22 @@ export default function AdminPage() {
     await fetch("/api/admin/session", { method: "DELETE" }).catch(() => undefined);
     setSignedIn(false);
     setSelected(false); setRevoked(false); setAccountDisabled(false); setContained(false);
+    setCompletionError("");
+  }
+
+  async function completeContainment() {
+    setCompletionError("");
+    try {
+      const response = await fetch("/api/admin/complete", { method: "POST" });
+      const data = (await response.json()) as { completed?: boolean; error?: string };
+      if (!response.ok || !data.completed) {
+        setCompletionError(data.error || "Unable to complete the challenge.");
+        return;
+      }
+      window.location.assign("/success");
+    } catch {
+      setCompletionError("The completion service is unavailable.");
+    }
   }
 
   if (checkingSession) return <main className="a-loading" />;
@@ -130,26 +146,6 @@ export default function AdminPage() {
           <h2>Keep the bank moving.</h2>
           <p>Monitor access, investigate unusual activity, and protect Citadelle's systems.</p>
         </aside>
-      </main>
-    );
-  }
-
-  /* ── CONTAINMENT SUCCESS ─────────────────────────────────── */
-  if (contained) {
-    return (
-      <main className="containment-success">
-        <FireworksCanvas />
-        <section className="success-content" aria-live="polite">
-          <div className="success-seal"><CitadelleLogo /></div>
-          <p className="success-kicker">Containment confirmed</p>
-          <h1>Citadelle secured.</h1>
-          <p className="success-lead">The unauthorised session was revoked and the compromised account was disabled.</p>
-          <p className="success-time">Completed at 09:48 UTC · {CASE_ID}</p>
-          <div className="success-actions">
-            <button onClick={signOut}>Sign out</button>
-            <Link href="/">Return to website</Link>
-          </div>
-        </section>
       </main>
     );
   }
@@ -354,10 +350,11 @@ export default function AdminPage() {
               </button>
             )}
             {accountDisabled && (
-              <button className="a-action-btn a-action-confirm" onClick={() => setContained(true)}>
+              <button className="a-action-btn a-action-confirm" onClick={completeContainment}>
                 Confirm incident containment
               </button>
             )}
+            {completionError && <p className="login-error" role="alert">{completionError}</p>}
 
             <p className="a-policy-note">
               Actions logged under IR policy POL-SEC-012. Senior analyst approval required for account termination.

@@ -176,9 +176,15 @@ footer p { color: rgba(255,255,255,.55); font-size: 12px; margin: 0; }
 .help-case span { color: #8c7139; font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .help-case strong { color: #48556a; font-size: 12px; }
 .help-chat { background: white; border: 1px solid #dce2eb; border-radius: 10px; box-shadow: 0 24px 70px rgba(7,29,69,.09); display: grid; grid-template-rows: auto minmax(0,1fr) auto; height: min(680px, calc(100vh - 190px)); min-height: 540px; overflow: hidden; }
+.help-chat.challenge-complete { border-color: rgba(60,165,116,.55); box-shadow: 0 24px 70px rgba(30,110,76,.14); }
 .chat-topbar { align-items: center; border-bottom: 1px solid #e4e8ef; color: #8a95a7; display: flex; font-size: 10px; justify-content: space-between; letter-spacing: .08em; padding: 15px 18px; text-transform: uppercase; }
 .chat-topbar > div { align-items: center; color: var(--ink); display: flex; font-weight: 700; gap: 9px; }
 .chat-topbar i { background: #3ca574; border-radius: 50%; box-shadow: 0 0 0 3px rgba(60,165,116,.12); height: 7px; width: 7px; }
+.chat-objective { align-items: center; background: #f8f9fb; border-bottom: 1px solid #e4e8ef; display: flex; gap: 20px; justify-content: space-between; padding: 13px 18px; }
+.chat-objective div { display: grid; gap: 3px; }
+.chat-objective span { color: #9b7a36; font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.chat-objective strong { color: #465267; font-size: 11px; }
+.chat-objective button { background: transparent; border: 1px solid #ccd3de; border-radius: 5px; color: #667389; font-size: 10px; padding: 7px 10px; }
 .chat-messages { overflow-y: auto; padding: 25px 24px; }
 .chat-message { align-items: flex-start; display: flex; gap: 11px; margin-bottom: 22px; }
 .chat-message.user { flex-direction: row-reverse; }
@@ -186,6 +192,12 @@ footer p { color: rgba(255,255,255,.55); font-size: 12px; margin: 0; }
 .chat-message.user .chat-role { background: #e4e8ee; color: #566277; font-family: var(--font-body); font-size: 9px; }
 .chat-message > div { background: #f1f3f6; border-radius: 3px 12px 12px 12px; color: #3e4b5f; font-size: 13px; line-height: 1.6; max-width: 82%; padding: 11px 14px; white-space: pre-wrap; word-break: break-word; }
 .chat-message.user > div { background: var(--green); border-radius: 12px 3px 12px 12px; color: white; }
+.chat-message.refused > div { background: #fff6e8; border: 1px solid #eed7af; color: #765b2c; }
+.chat-message.disclosed > div { background: #eaf7f0; border: 1px solid #a8d8be; color: #245d42; }
+.chat-success { background: #effaf4; border: 1px solid #a8d8be; border-radius: 8px; color: #285d43; margin: 4px 41px 22px; padding: 14px 16px; }
+.chat-success span { display: block; font-size: 9px; font-weight: 800; letter-spacing: .1em; margin-bottom: 5px; text-transform: uppercase; }
+.chat-success strong { display: block; font-size: 13px; }
+.chat-success p { font-size: 11px; line-height: 1.5; margin: 5px 0 0; opacity: .75; }
 .chat-form { border-top: 1px solid #e4e8ef; display: flex; gap: 10px; padding: 14px; }
 .chat-form input { background: #f4f6f8; border: 1px solid transparent; border-radius: 6px; color: var(--ink); flex: 1; min-width: 0; outline: 0; padding: 12px 13px; }
 .chat-form input:focus { background: white; border-color: #9aabc3; }
@@ -551,6 +563,7 @@ footer p { color: rgba(255,255,255,.55); font-size: 12px; margin: 0; }
 .success-kicker { color: #c9a45c; display: block; font-size: 9px; font-weight: 700; letter-spacing: .18em; margin-bottom: 16px; text-transform: uppercase; }
 .containment-success h1 { color: #fff; font-family: var(--font-display), serif; font-size: clamp(54px,7vw,78px); font-weight: 500; line-height: 1; margin-bottom: 20px; }
 .success-lead { color: rgba(255,255,255,.58); font-size: 14px; margin: 0 auto 32px; max-width: 520px; }
+.success-flag { background: rgba(201,164,92,.12); border: 1px solid rgba(201,164,92,.45); border-radius: 5px; color: #d9c28f; display: inline-block; font-size: 14px; margin-bottom: 28px; padding: 14px 20px; }
 .success-time { border-top: 1px solid rgba(255,255,255,.13); color: rgba(255,255,255,.4); font-size: 9px; letter-spacing: .1em; margin: 0 auto; max-width: 320px; padding-top: 18px; text-transform: uppercase; }
 .success-actions { display: flex; gap: 10px; justify-content: center; margin-top: 34px; }
 .success-actions a, .success-actions button { border: 1px solid rgba(255,255,255,.28); border-radius: 5px; color: white; font-size: 11px; font-weight: 600; padding: 11px 20px; }

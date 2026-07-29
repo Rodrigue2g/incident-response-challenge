@@ -5,3 +5,6 @@ export const adminUsername = "administrator";
 export const adminPasswordSalt = "d621a9b17a0d2c4ec4eda9cedcd6ef7a";
 export const adminPasswordHash = "7a01a4a3a2e55fdaaf633eafde887eee068aa66af20df65b30ee6d6982fd5357";
 export const adminSessionSigningKey = "043b478a99e58508b0f6a438131b352631b305f4dff9869cb6f4cfd49f89bc51";
+export const completionSigningKey = "cc78bdc807822184cd5908dccb2e4fc020e728b6db9c8f0765a89015cc85759b";
+export const pwnIssuerSecret = "21ca685e83a9cebef666623acca81a2706f2a0b54cf894b0d44dd34e2bd02920";
+export const finalChallengeFlag = "FLAG{CITADELLE_CYBERSEC_CHALLENGE_ORA_CAM_2026}";
