@@ -10,14 +10,12 @@ export const COMPLETION_COOKIE = "citadelle_challenge_complete";
 export const COMPLETION_MAX_AGE = 60 * 60 * 4;
 const TOKEN_TTL_MS = 30 * 60 * 1000;
 
-type TokenStore = Map<string, number>;
-
 const globalTokens = globalThis as typeof globalThis & {
-  citadelleCompletionTokens?: TokenStore;
+  citadelleUsedCompletionTokens?: Set<string>;
 };
-const tokens =
-  globalTokens.citadelleCompletionTokens ??
-  (globalTokens.citadelleCompletionTokens = new Map<string, number>());
+const usedTokens =
+  globalTokens.citadelleUsedCompletionTokens ??
+  (globalTokens.citadelleUsedCompletionTokens = new Set<string>());
 
 function equalText(left: string, right: string): boolean {
   const leftBuffer = Buffer.from(left);
@@ -39,19 +37,44 @@ export function validPwnIssuerSecret(value: string | null): boolean {
 }
 
 export function issueCompletionToken(): string {
-  const now = Date.now();
-  for (const [token, expires] of tokens) {
-    if (expires <= now) tokens.delete(token);
-  }
-  const token = randomBytes(32).toString("base64url");
-  tokens.set(token, now + TOKEN_TTL_MS);
-  return token;
+  const payload = Buffer.from(
+    JSON.stringify({
+      nonce: randomBytes(24).toString("base64url"),
+      exp: Date.now() + TOKEN_TTL_MS,
+    }),
+  ).toString("base64url");
+  return `${payload}.${signature(`completion-token:${payload}`)}`;
 }
 
 export function redeemCompletionToken(token: string): boolean {
-  const expires = tokens.get(token);
-  tokens.delete(token);
-  return typeof expires === "number" && expires > Date.now();
+  if (usedTokens.has(token)) return false;
+  const [payload, suppliedSignature, extra] = token.split(".");
+  if (!payload || !suppliedSignature || extra) return false;
+  if (
+    !equalText(
+      signature(`completion-token:${payload}`),
+      suppliedSignature,
+    )
+  ) {
+    return false;
+  }
+
+  try {
+    const data = JSON.parse(
+      Buffer.from(payload, "base64url").toString("utf8"),
+    ) as { nonce?: unknown; exp?: unknown };
+    if (
+      typeof data.nonce !== "string" ||
+      typeof data.exp !== "number" ||
+      data.exp <= Date.now()
+    ) {
+      return false;
+    }
+    usedTokens.add(token);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function createCompletionCookie(): string {

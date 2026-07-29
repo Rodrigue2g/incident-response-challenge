@@ -4,8 +4,15 @@
 
 __attribute__((noinline))
 static void win(void) {
-    puts("\nEmergency maintenance console unlocked.");
-    puts("Run `cleanup` to terminate all active sessions and secure the system.");
+    puts("\n\033[1;92m[ OK ] Emergency maintenance console unlocked.\033[0m");
+    puts("\033[96mRun `cleanup` to terminate all active sessions and secure the system.\033[0m");
+    setenv("TERM", "xterm-256color", 1);
+    setenv(
+        "PS1",
+        "\033[1;96mcitadelle\033[0m@\033[1;93memergency-maintenance\033[0m:"
+        "\033[1;94m\\w\033[0m\\$ ",
+        1
+    );
     execl("/bin/sh", "sh", "-i", NULL);
     _exit(1);
 }

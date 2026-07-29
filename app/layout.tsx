@@ -21,7 +21,11 @@ export const metadata: Metadata = {
   title: "Citadelle Private Bank",
   description: "Citadelle private banking. A fictional educational environment.",
   icons: {
-    icon: [{ url: "/logo.png", type: "image/png" }],
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/logo.png", type: "image/png", sizes: "1024x1024" },
+    ],
+    shortcut: "/favicon.svg",
     apple: "/logo.png",
   },
 };
