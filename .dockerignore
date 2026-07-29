@@ -7,6 +7,10 @@ npm-debug.log*
 # Facilitator-only answers and pristine evidence must never enter the image.
 facilitator
 
+# Instructor-only pwn solution and local Python environment.
+pwn/exploit.py
+pwn/.venv
+
 # Local and editor state
 .env
 .env.*

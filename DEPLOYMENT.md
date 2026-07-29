@@ -38,6 +38,24 @@ one.
 
 ## 2. Upload or clone the project
 
+For a private local checkout, upload it without facilitator materials, the
+working exploit, or local build environments:
+
+```bash
+ssh root@YOUR_VPS_IP "mkdir -p /srv/citadelle"
+rsync -az \
+  --exclude='.git' \
+  --exclude='.next' \
+  --exclude='node_modules' \
+  --exclude='.env' \
+  --exclude='facilitator' \
+  --exclude='pwn/exploit.py' \
+  --exclude='pwn/.venv' \
+  ./ root@YOUR_VPS_IP:/srv/citadelle/
+```
+
+Alternatively, if the private repository is available to the server:
+
 ```bash
 git clone YOUR_REPOSITORY_URL citadelle
 cd citadelle
