@@ -17,4 +17,4 @@ RUN chmod 0555 /challenge/challenge /usr/local/bin/cleanup
 USER 10001:10001
 WORKDIR /challenge
 EXPOSE 31337
-CMD ["socat", "TCP-LISTEN:31337,reuseaddr,fork", "EXEC:/challenge/challenge,pty,stderr,setsid,sigint,sane"]
+CMD ["socat", "TCP-LISTEN:31337,reuseaddr,fork", "EXEC:/challenge/challenge,pty,stderr,setsid,sigint,rawer"]

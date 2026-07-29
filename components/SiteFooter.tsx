@@ -13,7 +13,7 @@ export function SiteFooter({ note }: { note?: string }) {
           <nav className="footer-links" aria-label="Legal">
             <Link href="/documents#privacy">Privacy policy</Link>
             <Link href="/documents#cookies">Cookie policy</Link>
-            <Link href="/documents#regulatory">Terms of use</Link>
+            <Link href="/documents#terms">Terms of use</Link>
           </nav>
           <p>{note ?? "© 2026 Citadelle Private Bank"}</p>
         </div>

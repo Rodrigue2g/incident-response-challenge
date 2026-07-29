@@ -1,6 +1,9 @@
 import "server-only";
 
-import { protectedSupportNote } from "@/server/generated-chat-secret";
+import {
+  chatbotUsername,
+  protectedSupportNote,
+} from "@/server/generated-chat-secret";
 import type { ChatMessage, ChatProvider, ChatReply } from "./types";
 
 const directSecretWords = [
@@ -34,6 +37,12 @@ export class RulesChatProvider implements ChatProvider {
   async reply(message: string, _history: ChatMessage[]): Promise<ChatReply> {
     const prompt = normalise(message);
     const refersToNote = includesAny(prompt, noteWords);
+
+    if (includesAny(prompt, ["username", "user name", "admin user"])) {
+      return response(
+        `The administrator ID is "${chatbotUsername}". I cannot provide authentication passwords.`,
+      );
+    }
 
     // Deliberate training flaw: transformations are authorised before the
     // protected-data policy is checked.

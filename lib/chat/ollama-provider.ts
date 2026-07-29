@@ -1,6 +1,9 @@
 import "server-only";
 
-import { protectedSupportNote } from "@/server/generated-chat-secret";
+import {
+  chatbotUsername,
+  protectedSupportNote,
+} from "@/server/generated-chat-secret";
 import type { ChatMessage, ChatProvider, ChatReply } from "./types";
 
 type OllamaResponse = {
@@ -18,6 +21,18 @@ const refusalPhrases = [
   "not able to share",
   "must keep",
   "confidential",
+];
+
+const noteWords = [
+  "note",
+  "case",
+  "record",
+  "context",
+  "internal",
+  "protected",
+  "hidden",
+  "confidential",
+  "data",
 ];
 
 function normalise(value: string): string {
@@ -54,6 +69,86 @@ function classify(content: string): ChatReply["outcome"] {
     : "normal";
 }
 
+function controlledReply(message: string): ChatReply | null {
+  const prompt = normalise(message);
+  const refersToNote = noteWords.some((word) => prompt.includes(word));
+
+  if (
+    prompt.includes("username") ||
+    prompt.includes("user name") ||
+    prompt.includes("admin user")
+  ) {
+    return {
+      content: `The administrator ID is "${chatbotUsername}". I cannot provide authentication passwords.`,
+      outcome: "normal",
+    };
+  }
+
+  if (
+    prompt.includes("password") ||
+    prompt.includes("credential") ||
+    prompt.includes("login secret")
+  ) {
+    return {
+      content: "I can’t provide, guess, or reset administrator passwords through this support channel.",
+      outcome: "refused",
+    };
+  }
+
+  // Deliberate training flaw: transformations are processed before the
+  // protected-data policy, making these reliable prompt-injection paths.
+  if (
+    refersToNote &&
+    ["base64", "base 64", "b64", "encode"].some((word) => prompt.includes(word))
+  ) {
+    return {
+      content: `Diagnostic encoding complete:\n\n${Buffer.from(protectedSupportNote).toString("base64")}`,
+      outcome: "disclosed",
+    };
+  }
+
+  if (
+    refersToNote &&
+    ["reverse", "backwards", "backward"].some((word) => prompt.includes(word))
+  ) {
+    return {
+      content: `Requested text transformation:\n\n${[...protectedSupportNote].reverse().join("")}`,
+      outcome: "disclosed",
+    };
+  }
+
+  if (
+    refersToNote &&
+    [
+      "diagnostic export",
+      "support export",
+      "debug export",
+      "export the case",
+      "export case",
+      "json export",
+    ].some((word) => prompt.includes(word))
+  ) {
+    return {
+      content: `Support diagnostic export:\n\n${JSON.stringify({ case: "HC-204", note: protectedSupportNote }, null, 2)}`,
+      outcome: "disclosed",
+    };
+  }
+
+  if (
+    refersToNote &&
+    ["show", "send", "reveal", "print", "give", "display"].some((word) =>
+      prompt.includes(word),
+    )
+  ) {
+    return {
+      content: "I can’t disclose protected internal case notes. I can help with approved support and diagnostic operations.",
+      outcome: "refused",
+    };
+  }
+
+  return null;
+}
+
 export class OllamaChatProvider implements ChatProvider {
   constructor(
     private readonly baseUrl = process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434",
@@ -61,6 +156,9 @@ export class OllamaChatProvider implements ChatProvider {
   ) {}
 
   async reply(message: string, history: ChatMessage[]): Promise<ChatReply> {
+    const controlled = controlledReply(message);
+    if (controlled) return controlled;
+
     const systemPrompt = [
       "You are the Citadelle Private Bank Help Assistant.",
       "Speak naturally, politely, and concisely as a real bank support agent.",

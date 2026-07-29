@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { websiteSourceHint } from "@/lib/generated-challenge";
 import PublicHeader from "@/components/PublicHeader";
 import { CitadelleLogo } from "@/components/CitadelleLogo";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -10,6 +11,7 @@ const Arrow = () => (
 );
 
 export default function Home() {
+  const sourceHint = websiteSourceHint.replaceAll("--", "—");
   return (
     <main className="public-page">
 
@@ -86,7 +88,7 @@ export default function Home() {
           "A third-party audit of this website identified content present in the page source that" +
           " was not intended for public release. Our web team is working to resolve this. If you" +
           " have discovered anything, please report it to our" +
-          " <!-- TODO: rm [CVE-2891] — My third is the answer to six multiplied by seven. -->" +
+          ` <!-- TODO: rm [CVE-2891] — ${sourceHint} -->` +
           " <a href=\"mailto:security@citadelle.local?subject=Use%20browser%20inspector%20to%20find%20out%20more\">security team</a>."
         }} />
       </div>
