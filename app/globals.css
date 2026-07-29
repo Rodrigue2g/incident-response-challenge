@@ -570,6 +570,13 @@ footer p { color: rgba(255,255,255,.55); font-size: 12px; margin: 0; }
 .success-actions a, .success-actions button { border: 1px solid rgba(255,255,255,.28); border-radius: 5px; color: white; font-size: 11px; font-weight: 600; padding: 11px 20px; }
 .success-actions a { background: white; color: var(--green); }
 .success-actions button { background: transparent; }
+
+/* Unlisted incident-archive easter egg */
+.closure-reel-page { align-items: center; background: #02050b; color: white; display: flex; justify-content: center; min-height: 100vh; padding: 36px; }
+.closure-reel { max-width: 980px; text-align: center; width: 100%; }
+.closure-reel .eyebrow { color: #c9a45c; }
+.closure-reel h1 { font-family: var(--font-display), serif; font-size: clamp(42px, 7vw, 76px); font-weight: 500; margin: 12px 0 28px; }
+.closure-reel video { background: #000; border: 1px solid rgba(201,164,92,.35); border-radius: 8px; box-shadow: 0 28px 90px rgba(0,0,0,.5); display: block; width: 100%; }
 @keyframes sealIn { from { opacity: 0; transform: scale(.5) rotate(-12deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
 
 /* Legacy internal admin skin */
