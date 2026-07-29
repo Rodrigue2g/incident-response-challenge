@@ -320,14 +320,14 @@ def notebook_cells(config: dict[str, str], completed: bool) -> list[dict[str, ob
 
 
 def generate_notebooks(config: dict[str, str]) -> tuple[Path, Path]:
-    base = {"metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}, "language_info": {"name": "python", "version": "3"}}, "nbformat": 4, "nbformat_minor": 5}
-    student = ROOT / "public" / "evidence" / "fraud_analysis.ipynb"
-    solution = ROOT / "facilitator" / "fraud_analysis_completed.ipynb"
-    for path, completed in ((student, False), (solution, True)):
-        document = dict(base)
-        document["cells"] = notebook_cells(config, completed)
-        path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
-    return student, solution
+    student_src = ROOT / "facilitator" / "citadelle_bank_fraud_investigation_student.ipynb"
+    solution_src = ROOT / "facilitator" / "citadelle_bank_fraud_investigation_teacher_solution_updated.ipynb"
+    student_dst = ROOT / "public" / "evidence" / "fraud_analysis.ipynb"
+    solution_dst = ROOT / "facilitator" / "fraud_analysis_completed.ipynb"
+    # Copy both notebooks without modification — the source files are authoritative.
+    shutil.copy2(student_src, student_dst)
+    shutil.copy2(solution_src, solution_dst)
+    return student_dst, solution_dst
 
 
 def main() -> None:
