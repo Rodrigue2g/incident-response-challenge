@@ -1,11 +1,11 @@
-FROM alpine:3.22 AS builder
+FROM --platform=linux/amd64 alpine:3.22 AS builder
 RUN apk add --no-cache build-base
 WORKDIR /build
 COPY pwn/challenge.c .
 RUN cc -O0 -fno-stack-protector -fno-omit-frame-pointer -no-pie \
     -Wl,-z,norelro -o challenge challenge.c
 
-FROM alpine:3.22
+FROM --platform=linux/amd64 alpine:3.22
 RUN apk add --no-cache curl socat \
     && addgroup -g 10001 challenge \
     && adduser -D -H -u 10001 -G challenge challenge \

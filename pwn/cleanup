@@ -1,17 +1,13 @@
 #!/bin/sh
 set -eu
 
-###############################################################################
-# Colours — built with a real ESC byte so they work in both printf format
-# strings and %s arguments (single-quoted '\033' only works in format strings)
-###############################################################################
-_E=$(printf '\033')   # actual ESC byte (0x1B)
+_E=$(printf '\033')
 
-BG="${_E}[48;5;235m"       # dark charcoal  (body)
-HBG="${_E}[48;5;17m"       # dark navy       (boxes)
-GBG="${_E}[48;5;22m"       # dark green      (success)
+BG="${_E}[48;5;235m"
+HBG="${_E}[48;5;17m"
+GBG="${_E}[48;5;22m"
 
-FX="${_E}[39m${_E}[22m"    # reset FG+bold only — keeps current BG
+FX="${_E}[39m${_E}[22m"
 B="${_E}[1m"
 F_GRN="${_E}[92m"
 F_YLW="${_E}[93m"
@@ -20,17 +16,11 @@ F_WHT="${_E}[97m"
 F_LGY="${_E}[38;5;252m"
 F_GRY="${_E}[38;5;241m"
 
-BADGE_ALERT="${_E}[48;5;88m${_E}[97m"    # dark-red bg
-BADGE_ACT="${_E}[48;5;20m${_E}[97m"      # dark-blue bg
-BADGE_INF="${_E}[48;5;58m${_E}[93m"      # dark-yellow bg
+BADGE_ALERT="${_E}[48;5;88m${_E}[97m"
+BADGE_INF="${_E}[48;5;58m${_E}[93m"
 RST="${_E}[0m"
-EOL="${_E}[K${_E}[0m"   # fill line with current BG, then full reset
+EOL="${_E}[K${_E}[0m"
 
-_CR=$(printf '\r')
-
-###############################################################################
-# Layout helpers
-###############################################################################
 bl()  { printf "%s%s\n" "${BG}" "${EOL}"; }
 sep() { printf "${BG}  ${F_GRY}────────────────────────────────────────────────────────${EOL}\n"; }
 hbox(){ printf "${HBG}  ${B}${F_CYN}%s${FX}  ${EOL}\n" "$1"; }
@@ -42,129 +32,7 @@ step() {
     printf "${FX}  ${B}${F_GRN}[ ✓ OK ]${EOL}\n"
 }
 
-###############################################################################
-# Single-key input via dd — busybox ash does NOT support read -n
-###############################################################################
-getkey() {
-    old=$(stty -g 2>/dev/null) || true
-    stty raw -echo 2>/dev/null || true
-    c1=$(dd bs=1 count=1 2>/dev/null) || c1=""
-    if [ "$c1" = "${_E}" ]; then
-        dd bs=1 count=1 >/dev/null 2>&1 || true   # discard '['
-        c3=$(dd bs=1 count=1 2>/dev/null) || c3=""
-        stty "$old" 2>/dev/null || true
-        case "$c3" in
-            A) printf UP;;
-            B) printf DOWN;;
-            *) printf OTHER;;
-        esac
-    else
-        stty "$old" 2>/dev/null || true
-        case "$c1" in
-            ""|"${_CR}") printf ENTER;;
-            q|Q)          printf QUIT;;
-            *)            printf OTHER;;
-        esac
-    fi
-}
-
-###############################################################################
-# Session data
-###############################################################################
-alive="1 2 3"
-
-session_info() {
-    case "$1" in
-        1) printf "administrator  192.168.1.42   SSH    02:14:33";;
-        2) printf "administrator  10.0.2.15      SSH    00:41:07";;
-        3) printf "administrator  172.16.0.8     HTTPS  00:08:22";;
-    esac
-}
-
-count_alive() {
-    n=0; for _x in $alive; do n=$((n+1)); done; printf '%d' "$n"
-}
-
-session_at() {           # 0-based position → session ID
-    _pos=0
-    for _x in $alive; do
-        if [ "$_pos" = "$1" ]; then printf '%s' "$_x"; return; fi
-        _pos=$((_pos+1))
-    done
-}
-
-remove_session() {       # remove session ID $1 from $alive (set -e safe)
-    _new=""
-    for _x in $alive; do
-        if [ "$_x" != "$1" ]; then
-            _new="${_new:+$_new }$_x"
-        fi
-    done
-    alive="$_new"
-}
-
-###############################################################################
-# Session picker — draws menu, sets MENU_H to number of lines printed
-###############################################################################
-MENU_H=0
-sel=0
-
-draw_picker() {
-    _n=$(count_alive)
-    MENU_H=0
-
-    bl;                             MENU_H=$((MENU_H+1))
-    printf "${BG}  ${F_GRY}%-18s  %-16s  %-7s  %s${EOL}\n" \
-        "USER" "HOST" "PROTO" "SESSION AGE";   MENU_H=$((MENU_H+1))
-    sep;                            MENU_H=$((MENU_H+1))
-
-    _row=0
-    for _sid in $alive; do
-        set -- $(session_info "$_sid")
-        _usr="$1"; _host="$2"; _proto="$3"; _age="$4"
-        if [ "$sel" = "$_row" ]; then
-            printf "${BG}  ${B}${F_CYN}▶ %-18s  %-16s  %-7s  %s${FX}${EOL}\n" \
-                "$_usr" "$_host" "$_proto" "$_age"
-        else
-            printf "${BG}    ${F_LGY}%-18s  %-16s  %-7s  %s${FX}${EOL}\n" \
-                "$_usr" "$_host" "$_proto" "$_age"
-        fi
-        MENU_H=$((MENU_H+1)); _row=$((_row+1))
-    done
-
-    sep;                            MENU_H=$((MENU_H+1))
-    if [ "$sel" = "$_n" ]; then
-        printf "${BG}  ${B}${F_YLW}▶ Terminate ALL remaining sessions${FX}${EOL}\n"
-    else
-        printf "${BG}    ${F_LGY}Terminate ALL remaining sessions${FX}${EOL}\n"
-    fi
-    MENU_H=$((MENU_H+1))
-
-    bl;                             MENU_H=$((MENU_H+1))
-    printf "${BG}  ${F_GRY}↑↓ navigate   ENTER terminate selected${EOL}\n"
-                                    MENU_H=$((MENU_H+1))
-    bl;                             MENU_H=$((MENU_H+1))
-}
-
-###############################################################################
-# Terminate a single session (animation printed below current picker)
-###############################################################################
-terminate_one() {
-    set -- $(session_info "$1")
-    _host="$2"
-    bl
-    printf "${BG}  ${BADGE_ACT} ACTION ${RST}${BG}  ${F_WHT}Terminating ${B}${F_CYN}%s${FX}${F_WHT}...${EOL}\n" \
-        "$_host"
-    printf "${BG}  ${F_GRY}    Sending FIN packet...${EOL}\n";        sleep 0.25
-    printf "${BG}  ${F_GRY}    Revoking session token...${EOL}\n";    sleep 0.25
-    printf "${BG}  ${F_GRY}    Closing socket descriptor...${EOL}\n"; sleep 0.25
-    printf "${BG}  ${B}${F_GRN}    ✓  Session terminated: %s${FX}${EOL}\n" "$_host"
-    sleep 0.35
-}
-
-###############################################################################
-# Header
-###############################################################################
+# ── header ────────────────────────────────────────────────────────────────────
 printf '\n'
 hbox "╔══════════════════════════════════════════════════════╗"
 hbox "║                                                      ║"
@@ -177,72 +45,15 @@ bl
 sleep 0.3
 printf "${BG}  ${BADGE_ALERT} ALERT ${RST}${BG}  ${F_WHT}Privileged maintenance shell acquired.${EOL}\n"
 sleep 0.2
-printf "${BG}  ${BADGE_INF}  INF  ${RST}${BG}  ${F_LGY}Enumerating active sessions...${EOL}\n"
-sleep 1.0
+printf "${BG}  ${BADGE_INF}  INF  ${RST}${BG}  ${F_LGY}Initiating emergency cleanup sequence...${EOL}\n"
 bl
-sep
-printf "${BG}  ${B}${F_WHT}  ACTIVE SESSIONS — SELECT A SESSION TO TERMINATE${FX}${EOL}\n"
-sep
-bl
+sleep 0.8
 
-###############################################################################
-# Interactive picker loop
-###############################################################################
-draw_picker
-
-while true; do
-    key=$(getkey)
-    _n=$(count_alive)
-    _max=$((_n))   # index of "Terminate ALL" option
-
-    case "$key" in
-        UP)
-            if [ "$sel" -gt 0 ]; then sel=$((sel-1)); fi
-            printf '\033[%dA' "$MENU_H"
-            draw_picker
-            ;;
-        DOWN)
-            if [ "$sel" -lt "$_max" ]; then sel=$((sel+1)); fi
-            printf '\033[%dA' "$MENU_H"
-            draw_picker
-            ;;
-        ENTER)
-            _n=$(count_alive)
-            if [ "$sel" -lt "$_n" ]; then
-                _sid=$(session_at "$sel")
-                terminate_one "$_sid"
-                remove_session "$_sid"
-                _n=$(count_alive)
-                if [ "$sel" -gt "$_n" ]; then sel=$_n; fi
-                if [ "$_n" = "0" ]; then
-                    bl
-                    printf "${BG}  ${B}${F_GRN}  ✓  All sessions terminated. Proceeding with cleanup.${FX}${EOL}\n"
-                    bl; sleep 0.5; break
-                fi
-                bl; draw_picker
-            else
-                bl
-                printf "${BG}  ${BADGE_ACT} ACTION ${RST}${BG}  ${F_WHT}Terminating all remaining sessions...${EOL}\n"
-                for _sid in $alive; do
-                    set -- $(session_info "$_sid"); _host="$2"
-                    printf "${BG}  ${F_GRY}    ✓  Terminated: %-20s${EOL}\n" "$_host"
-                    sleep 0.3
-                done
-                alive=""
-                bl
-                printf "${BG}  ${B}${F_GRN}  ✓  All sessions terminated. Proceeding with cleanup.${FX}${EOL}\n"
-                bl; sleep 0.5; break
-            fi
-            ;;
-    esac
-done
-
-###############################################################################
-# Cleanup sequence
-###############################################################################
+# ── cleanup steps ─────────────────────────────────────────────────────────────
 sep
 printf "${BG}  ${B}${F_WHT}  CLEANUP SEQUENCE${FX}${EOL}\n"
-sep; bl
+sep
+bl
 
 step 1 4 "Revoking administrator sessions..."
 step 2 4 "Closing unauthorized connections..."
@@ -250,13 +61,12 @@ step 3 4 "Resetting access control lists..."
 step 4 4 "Flushing authentication token cache..."
 
 bl; sep; bl; sleep 0.3
+
 printf "${GBG}  ${B}${F_GRN}  ✓  ALL ACTIVE SESSIONS TERMINATED${FX}  ${EOL}\n"
 printf "${GBG}  ${B}${F_GRN}  ✓  SYSTEM SECURED${FX}  ${EOL}\n"
 bl
 
-###############################################################################
-# Incident closure report
-###############################################################################
+# ── closure report ────────────────────────────────────────────────────────────
 sleep 0.5
 printf "${BG}  ${BADGE_INF}  INF  ${RST}${BG}  ${F_LGY}Contacting incident closure system...${EOL}\n"
 bl; sleep 1.2

@@ -33,7 +33,7 @@ const documents = [
     code: "OPS-FA-07",
     title: "Transaction review appendix",
     description: "Supporting workbook for the July transaction-risk review.",
-    href: "/evidence/fraud_analysis.ipynb",
+    href: "/evidence/citadelle_transaction_review.ipynb",
     type: "Operational",
     download: "citadelle_transaction_review.ipynb",
   },

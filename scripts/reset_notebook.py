@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Reset the student fraud_analysis.ipynb to its unfinished (blank) state.
+Reset the student citadelle_transaction_review.ipynb to its unfinished state.
 
 Usage:
     python3 scripts/reset_notebook.py
 
 This re-runs the challenge generator, which overwrites only the student
-notebook at public/evidence/fraud_analysis.ipynb. All other challenge
+notebook at public/evidence/citadelle_transaction_review.ipynb. All other challenge
 assets are also regenerated from facilitator/challenge.env.
 """
 
@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 GENERATOR = ROOT / "scripts" / "generate_challenges.py"
-STUDENT_NB = ROOT / "public" / "evidence" / "fraud_analysis.ipynb"
+STUDENT_NB = ROOT / "public" / "evidence" / "citadelle_transaction_review.ipynb"
 
 print("Restoring student notebook …")
 result = subprocess.run(

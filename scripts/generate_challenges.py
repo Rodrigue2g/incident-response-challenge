@@ -320,9 +320,9 @@ def notebook_cells(config: dict[str, str], completed: bool) -> list[dict[str, ob
 
 
 def generate_notebooks(config: dict[str, str]) -> tuple[Path, Path]:
-    student_src = ROOT / "facilitator" / "citadelle_bank_fraud_investigation_student.ipynb"
+    student_src = ROOT / "facilitator" / "citadelle_transaction_review.ipynb"
     solution_src = ROOT / "facilitator" / "citadelle_bank_fraud_investigation_teacher_solution_updated.ipynb"
-    student_dst = ROOT / "public" / "evidence" / "fraud_analysis.ipynb"
+    student_dst = ROOT / "public" / "evidence" / "citadelle_transaction_review.ipynb"
     solution_dst = ROOT / "facilitator" / "fraud_analysis_completed.ipynb"
     # Copy both notebooks without modification — the source files are authoritative.
     shutil.copy2(student_src, student_dst)

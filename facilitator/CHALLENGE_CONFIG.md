@@ -14,7 +14,7 @@ The generator uses only Python’s standard library and rebuilds:
 - `server/generated-chat-secret.ts` for the server-only Help Assistant challenge;
 - `server/generated-admin-credentials.ts` with the administrator ID, a derived
   password hash, the final challenge flag, and the local session-signing key;
-- the unfinished student `fraud_analysis.ipynb`;
+- the unfinished student `citadelle_transaction_review.ipynb`;
 - the completed facilitator notebook.
 
 Keep `facilitator/` out of any student-only distribution because it contains the
