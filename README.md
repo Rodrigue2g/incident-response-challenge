@@ -100,6 +100,8 @@ The first Compose start also downloads `qwen2.5:0.5b` into the persistent
 `ollama-models` volume. Override `OLLAMA_MODEL` in `.env` if the host has enough
 resources for a larger model.
 
+Running without Compose is not recommended — you lose the Ollama model and automatic fallback.
+
 To run without Compose:
 
 ```bash

@@ -1,11 +1,13 @@
 # Deploying Citadelle on a small VPS
 
-This deployment runs three containers:
+This deployment runs five containers:
 
 - `citadelle-challenge`: the Next.js application;
 - `citadelle-ollama`: the private local model server;
 - `citadelle-ollama-model`: a one-shot container that downloads the configured
-  model before the application starts.
+  model before the application starts;
+- `citadelle-pwn`: the binary exploitation challenge, isolated on an internal network;
+- `citadelle-pwn-gateway`: a socat proxy that exposes port 31337 to the host.
 
 The default `qwen2.5:0.5b` model is selected for a 1-vCPU, 4-GB KVM VPS. It is
 small and CPU-only responses can be slow. The deterministic chatbot takes over
@@ -50,14 +52,15 @@ rsync -az \
   --exclude='.env' \
   --exclude='facilitator' \
   --exclude='pwn/exploit.py' \
+  --exclude='pwn/exploit_auto.py' \
   --exclude='pwn/.venv' \
   ./ root@YOUR_VPS_IP:/srv/citadelle/
 ```
 
-Alternatively, if the private repository is available to the server:
+Alternatively, with git clone:
 
 ```bash
-git clone YOUR_REPOSITORY_URL citadelle
+git clone https://github.com/Rodrigue2g/incident-response-challenge.git
 cd citadelle
 cp .env.example .env
 ```
@@ -67,10 +70,16 @@ The production `.env` should contain:
 ```dotenv
 OLLAMA_MODEL=qwen2.5:0.5b
 CITADELLE_BIND_IP=127.0.0.1
+PUBLIC_APP_URL=https://challenge.example.com
+PWN_BIND_IP=127.0.0.1
 ```
 
-Binding the application to `127.0.0.1` keeps port 3000 private. Ollama is also
-bound only to `127.0.0.1:11434`; never expose port 11434 publicly.
+`CITADELLE_BIND_IP=127.0.0.1` keeps port 3000 private behind the reverse proxy.
+`PUBLIC_APP_URL` is the public-facing URL placed in the incident-closure link
+returned by the pwn container — set it to the domain participants will use.
+`PWN_BIND_IP=127.0.0.1` keeps port 31337 private; open it only for a supervised
+session and restrict TCP 31337 at the VPS or provider firewall.
+Ollama is also bound only to `127.0.0.1:11434`; never expose port 11434 publicly.
 
 ## 3. Start the application and download the model
 
@@ -85,6 +94,7 @@ The first start downloads the Ollama image and model. Check progress and status:
 docker compose ps
 docker compose logs ollama-model
 docker compose logs --tail=100 citadelle
+docker compose logs --tail=50 pwn
 docker exec citadelle-ollama ollama list
 curl http://127.0.0.1:3000/api/health
 ```
@@ -123,12 +133,14 @@ sudo systemctl status caddy
 Caddy obtains and renews the HTTPS certificate automatically when the domain
 resolves correctly and ports 80 and 443 are reachable.
 
-Only SSH, HTTP, and HTTPS should be allowed through the VPS firewall. Ports 3000
-and 11434 should remain private.
+Only SSH, HTTP, and HTTPS should be allowed through the VPS firewall by default.
+Ports 3000, 11434, and 31337 should remain private. Open TCP 31337 at the
+firewall only for sessions where participants need to reach the pwn challenge
+from outside the VPS.
 
 ## 5. Operating alongside OpenClaw
 
-OpenClaw and this project can coexist, but a 4-GB KVM 1 is tight:
+OpenClaw and this project can coexist, but a 4-GB KVM VPS is tight:
 
 - keep `qwen2.5:0.5b`;
 - keep Ollama concurrency at one;
